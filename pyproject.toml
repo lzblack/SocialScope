@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "socialscope"
+version = "0.1.0"
+description = ""
+authors = ["Zhi Li <lzblack@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.0"
+pandas = "^2.2.3"
+nltk = "^3.9.1"
+torch = "^2.4.1"
+uvicorn = "^0.31.1"
+textblob = "^0.18.0.post0"
+gensim = "^4.3.3"
+transformers = "^4.45.2"
+python-multipart = "^0.0.12"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
