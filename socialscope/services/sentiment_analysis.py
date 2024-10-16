@@ -1,9 +1,13 @@
 import numpy as np
 from scipy.special import softmax
 from textblob import TextBlob
-from transformers import (AutoConfig, AutoModelForSequenceClassification,
-                          AutoTokenizer, TFAutoModelForSequenceClassification,
-                          pipeline)
+from transformers import (
+    AutoConfig,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    TFAutoModelForSequenceClassification,
+    pipeline,
+)
 
 
 def analyze_sentiment_textblob(text: str) -> dict:
@@ -67,12 +71,12 @@ def analyze_sentiment_roberta(text: str) -> dict:
     config = AutoConfig.from_pretrained(MODEL)
     model = AutoModelForSequenceClassification.from_pretrained(MODEL)
     model.save_pretrained(MODEL)
-    
+
     text = preprocess(text)
     encoded_input = tokenizer(text, return_tensors="pt")
     output = model(**encoded_input)
     scores = output[0][0].detach().numpy()
-    scores = softmax(scores)   
+    scores = softmax(scores)
 
     ranking = np.argsort(scores)
     ranking = ranking[::-1]
@@ -80,7 +84,7 @@ def analyze_sentiment_roberta(text: str) -> dict:
         l = config.id2label[ranking[i]]
         s = scores[ranking[i]]
         print(f"{i+1}) {l} {np.round(float(s), 4)}")
-    
+
     return scores
 
 
