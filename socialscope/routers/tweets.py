@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from socialscope.services.sentiment_analysis import analyze_dataframe
+from socialscope.services.sentiment_analysis import analyze_dataframe_textblob
 from socialscope.utils.data_processing import process_csv
 import pandas as pd
 import numpy as np
