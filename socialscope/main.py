@@ -1,14 +1,23 @@
+import os
+
+import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from socialscope.routers import tweets
 
+load_dotenv()
 app = FastAPI(title="socialscope", debug=True)
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://127.0.0.1",
+        "http://localhost:8080",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,7 +37,18 @@ async def read_root():
     return {"message": "Welcome to socialscope API"}
 
 
-if __name__ == "__main__":
-    import uvicorn
+def main():
+    debug_mode = os.getenv("DEBUG_MODE", "0") == "1"
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=debug_mode,
+        # debug=debug_mode,
+        workers=1,
+    )
+
+
+if __name__ == "__main__":
+    main()
