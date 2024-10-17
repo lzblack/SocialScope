@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from socialscope.services.sentiment_analysis import analyze_dataframe_textblob
+from socialscope.services.sentiment_analysis import analyze_dataframe
 from socialscope.utils.data_processing import process_csv
 import pandas as pd
 import numpy as np
@@ -25,7 +25,7 @@ async def upload_csv(file: UploadFile = File(...)):
         print(df["text"].isnull().sum())
         print(df["text"].apply(type).value_counts())
 
-        df = analyze_dataframe_textblob(df)
+        df = analyze_dataframe(df)
 
         results = df.where(pd.notnull(df), None).to_dict("records")
 
