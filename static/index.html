@@ -57,13 +57,19 @@
           </div>
           <p>{{ tweet.text }}</p>
           <div class="sentiment" :class="tweet.sentiment_textblob">
-            {{ tweet.sentiment_textblob
-            }} (Polarity: {{ tweet.polarity_textblob.toFixed(2) }})
-            Sentiment from TextBlob (Traditional NLP Model)
+            {{ tweet.sentiment_textblob }} (Polarity: {{
+            tweet.polarity_textblob.toFixed(2) }}) Sentiment from TextBlob
+            (Traditional NLP Model)
           </div>
           <div class="sentiment" :class="tweet.sentiment_roberta">
-            {{ tweet.sentiment_roberta
-            }} (Score: {{ tweet.score_roberta.toFixed(2) }}) Sentiment from roBERTa (Newer NLP Model)
+            {{ tweet.sentiment_roberta }} (Score: {{
+            tweet.score_roberta.toFixed(2) }}) Sentiment from roBERTa (Newer NLP
+            Model)
+          </div>
+          <div class="sentiment" :class="tweet.sentiment_openai">
+            {{ tweet.sentiment_openai }} (Confidence: {{
+            tweet.confidence_openai.toFixed(2) }}) Sentiment from OpenAI API
+            (State-of-the-Art NLP Model)
           </div>
         </div>
       </div>
