@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from socialscope.routers import tweets
 
 load_dotenv()
+
+# logging.basicConfig(level=logging.INFO)
 app = FastAPI(title="socialscope", debug=True)
 
 
