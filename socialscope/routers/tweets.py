@@ -1,9 +1,11 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from datetime import datetime
+
+import numpy as np
+import pandas as pd
+from fastapi import APIRouter, File, HTTPException, UploadFile
+
 from socialscope.services.sentiment_analysis import analyze_dataframe
 from socialscope.utils.data_processing import process_csv
-import pandas as pd
-import numpy as np
-from datetime import datetime
 
 router = APIRouter()
 

@@ -1,9 +1,11 @@
 import os
+import threading
 from pathlib import Path
+
 import numpy as np
 from scipy.special import softmax
-from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
-import threading
+from transformers import (AutoConfig, AutoModelForSequenceClassification,
+                          AutoTokenizer)
 
 
 class SentimentAnalyzer:
