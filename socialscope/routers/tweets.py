@@ -25,7 +25,7 @@ async def upload_csv(file: UploadFile = File(...)):
         print(df["text"].isnull().sum())
         print(df["text"].apply(type).value_counts())
 
-        df = analyze_dataframe(df)
+        df = analyze_dataframe_textblob(df)
 
         results = df.where(pd.notnull(df), None).to_dict("records")
 
