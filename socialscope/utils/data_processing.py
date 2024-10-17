@@ -1,6 +1,12 @@
+import re
 import pandas as pd
 import numpy as np
 from datetime import datetime
+
+
+def remove_ordinal_indicator(date_string):
+    """"""
+    return re.sub(r"(\d+)(st|nd|rd|th)", r"\1", date_string)
 
 
 def process_csv(file):
@@ -8,20 +14,25 @@ def process_csv(file):
     required_columns = ["author_username", "post_created_at", "raw_body_text"]
 
     if not all(col in df.columns for col in required_columns):
-        raise ValueError("CSV文件缺少必要的列")
+        raise ValueError("CSV lacks required columns")
 
     def parse_date(date_string):
+
         try:
-            return pd.to_datetime(date_string, format="%B %d %Y, %H:%M %Z")
-        except ValueError:
+            date = pd.to_datetime(
+                remove_ordinal_indicator(date_string), format="%B %d %Y, %H:%M %Z"
+            )
+            return date
+        except ValueError as e:
+            print(e)
             return pd.NaT
 
     df["post_created_at"] = df["post_created_at"].apply(parse_date)
 
-    # 将 'raw_body_text' 列转换为字符串，并用空字符串替换 NaN 值
+    # Fill missing values with empty string
     df["raw_body_text"] = df["raw_body_text"].fillna("").astype(str)
 
-    # 替换 NaT 为 None
+    # Replace NaT with None
     df = df.replace({pd.NaT: None})
 
     return df[required_columns].rename(
@@ -31,3 +42,9 @@ def process_csv(file):
             "raw_body_text": "text",
         }
     )
+
+
+if __name__ == "__main__":
+    filepath = "data/twitter_sample.csv"
+    df = process_csv(filepath)
+    print(df)
