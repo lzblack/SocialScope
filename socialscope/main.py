@@ -22,8 +22,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://127.0.0.1:8000",
-        "http://localhost:8000",
+        "http://127.0.0.1:8080",
+        "http://localhost:8080",
         "https://socialscope.108122.xyz",
     ],
     allow_credentials=True,
@@ -57,7 +57,7 @@ def main():
     uvicorn.run(
         "socialscope.main:app",
         host=("127.0.0.1" if debug_mode else "0.0.0.0"),
-        port=8000,
+        port=8080,
         reload=debug_mode,
         reload_dirs=["./socialscope"],
         workers=1,
