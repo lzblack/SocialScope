@@ -88,9 +88,14 @@
               const formData = new FormData();
               formData.append("file", file);
 
+              const baseURL =
+                window.location.hostname === "localhost"
+                  ? "http://localhost:8080/api/v1"
+                  : "http://107.174.147.50:8080/api/v1";
+
               try {
                 const response = await axios.post(
-                  "http://localhost:8080/api/v1/upload-csv",
+                  `${baseURL}/upload-csv`,
                   formData,
                   {
                     headers: {
