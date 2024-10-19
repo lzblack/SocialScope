@@ -5,13 +5,16 @@ After=network.target
 [Service]
 User=zli
 Group=zli
-WorkingDirectory=/home/zli/apps/socialscope
+WorkingDirectory=/home/zli/apps/SocialScope
 
 
-ExecStart=/home/zli/.cache/pypoetry/virtualenvs/socialscope-xxx/bin/uvicorn socialscope.main:app --host 0.0.0.0 --port 8000
+Environment="PYENV_ROOT=/home/zli/.pyenv"
+Environment="PATH=/home/zli/.pyenv/shims:/home/youruser/.pyenv/bin:/usr/local/bin:/usr/bin:/bin"
+
+ExecStart=/home/zli/.cache/pypoetry/virtualenvs/socialscope-Vvt6X9U0-py3.12/bin/uvicorn socialscope.main:app --host 0.0.0.0 --port 8000
 
 
-Environment="PATH=/home/zli/.cache/pypoetry/virtualenvs/socialscope-KNX8GJ43-py3.11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="PATH=/home/zli/.cache/pypoetry/virtualenvs/socialscope-Vvt6X9U0-py3.12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="POETRY_VIRTUALENVS_IN_PROJECT=false"
 
 Restart=always
