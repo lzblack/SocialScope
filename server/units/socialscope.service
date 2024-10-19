@@ -1,5 +1,5 @@
 [Unit]
-Description=OIM APIs Service running under Uvicorn
+Description=SocialScope Service running under Uvicorn
 After=network.target
 
 [Service]
@@ -9,9 +9,9 @@ WorkingDirectory=/home/zli/apps/SocialScope
 
 
 Environment="PYENV_ROOT=/home/zli/.pyenv"
-Environment="PATH=/home/zli/.pyenv/shims:/home/youruser/.pyenv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PATH=/home/zli/.pyenv/shims:/home/zli/.pyenv/bin:/usr/local/bin:/usr/bin:/bin"
 
-ExecStart=/home/zli/.cache/pypoetry/virtualenvs/socialscope-Vvt6X9U0-py3.12/bin/uvicorn socialscope.main:app --host 0.0.0.0 --port 8000
+ExecStart=/home/zli/.pyenv/shims/poetry run uvicorn socialscope.main:app --host 0.0.0.0 --port 8000
 
 
 Environment="PATH=/home/zli/.cache/pypoetry/virtualenvs/socialscope-Vvt6X9U0-py3.12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
