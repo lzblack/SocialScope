@@ -1,0 +1,27 @@
+[Unit]
+Description=OIM APIs Service running under Uvicorn
+After=network.target
+
+[Service]
+User=zli
+Group=zli
+WorkingDirectory=/home/zli/apps/socialscope
+
+
+ExecStart=/home/zli/.cache/pypoetry/virtualenvs/socialscope-xxx/bin/uvicorn socialscope.main:app --host 0.0.0.0 --port 8000
+
+
+Environment="PATH=/home/zli/.cache/pypoetry/virtualenvs/socialscope-KNX8GJ43-py3.11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="POETRY_VIRTUALENVS_IN_PROJECT=false"
+
+Restart=always
+RestartSec=5s
+
+StandardOutput=journal
+StandardError=journal
+
+#StandardOutput=append:/home/zli/apps/logs/socialscope/app_log
+#StandardError=append:/home/zli/apps/logs/socialscope/app_error_log
+
+[Install]
+WantedBy=multi-user.target
