@@ -1,5 +1,6 @@
 import os
 
+from fastapi.responses import HTMLResponse
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -10,7 +11,12 @@ from socialscope.routers import tweets
 
 load_dotenv()
 
-app = FastAPI(title="socialscope", debug=True)
+
+# Initialize the FastAPI app
+app = FastAPI(
+    title="socialscope",
+    debug=os.getenv("DEBUG_MODE", "0") == "1",
+)
 
 
 app.add_middleware(
@@ -18,6 +24,7 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:8000",
         "http://localhost:8000",
+        "https://socialscope.108122.xyz",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -38,15 +45,21 @@ async def read_root():
     return {"message": "Welcome to socialscope API"}
 
 
+@app.get("/x", response_class=HTMLResponse)
+async def get_tweet_page():
+    with open("static/index.html") as f:
+        return f.read()
+
+
 def main():
     debug_mode = os.getenv("DEBUG_MODE", "0") == "1"
 
     uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
+        "socialscope.main:app",
+        host=("127.0.0.1" if debug_mode else "0.0.0.0"),
         port=8000,
         reload=debug_mode,
-        # debug=debug_mode,
+        reload_dirs=["./socialscope"],
         workers=1,
     )
 
