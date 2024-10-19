@@ -18,7 +18,7 @@ scipy = "^1.14.1"
 python-multipart = "^0.0.12"
 python-dotenv = "^1.0.1"
 openai = "^1.51.2"
-torch = {version = "^2.4.1", extras = ["cpu"]}
+torch = { version = "^2.4.1", extras = ["cpu"] }
 
 [build-system]
 requires = ["poetry-core"]
