@@ -39,7 +39,7 @@ def analyze_sentiment_openai(text: str) -> dict:
             max_tokens=100,
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=0.2,
         )
 
         result = eval(response.choices[0].message.content)
