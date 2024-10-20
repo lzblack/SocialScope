@@ -6,7 +6,10 @@
     <title>SocialScope Tweet Sentiment Analysis</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --primary-color: #3498db;
@@ -17,31 +20,31 @@
         --negative-color: #e74c3c;
         --neutral-color: #95a5a6;
       }
-      
+
       body {
-        font-family: 'Roboto', Arial, sans-serif;
+        font-family: "Roboto", Arial, sans-serif;
         line-height: 1.6;
         margin: 0;
         padding: 20px;
         background-color: var(--background-color);
         color: var(--text-color);
       }
-      
+
       #app {
         max-width: 800px;
         margin: auto;
       }
-      
+
       h1 {
         color: var(--primary-color);
         text-align: center;
         margin-bottom: 30px;
       }
-      
+
       input[type="file"] {
         display: none;
       }
-      
+
       .file-upload-label {
         display: inline-block;
         padding: 10px 20px;
@@ -51,11 +54,11 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-      
+
       .file-upload-label:hover {
         background-color: #2980b9;
       }
-      
+
       .tweet {
         background-color: white;
         border-radius: 10px;
@@ -64,11 +67,11 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
       }
-      
+
       .tweet:hover {
         transform: translateY(-5px);
       }
-      
+
       .tweet-header {
         display: flex;
         justify-content: space-between;
@@ -76,58 +79,65 @@
         font-size: 0.9em;
         color: var(--secondary-color);
       }
-      
+
       .sentiment {
         font-weight: bold;
         margin-top: 10px;
         padding: 5px 10px;
         border-radius: 5px;
       }
-      
+
       .sentiment-details {
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-size: 0.9em;
       }
-      
+
       .model-source {
         font-style: italic;
         color: var(--secondary-color);
       }
-      
+
       .positive {
         background-color: var(--positive-color);
         color: white;
       }
-      
+
       .negative {
         background-color: var(--negative-color);
         color: white;
       }
-      
+
       .neutral {
         background-color: var(--neutral-color);
         color: white;
       }
-      
+
       @media (max-width: 600px) {
         body {
           padding: 10px;
         }
-        
+
         .tweet {
           padding: 15px;
         }
-        
+
         .sentiment-details {
           flex-direction: column;
           align-items: flex-start;
         }
-        
+
         .model-source {
           margin-top: 5px;
         }
+      }
+      .error-message {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -138,6 +148,7 @@
         Upload CSV File
         <input type="file" @change="handleFileUpload" accept=".csv" />
       </label>
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div v-if="tweets.length > 0">
         <h2>Analyzed Tweets</h2>
         <div v-for="tweet in tweets" :key="tweet.id" class="tweet">
@@ -148,26 +159,44 @@
           <p>{{ tweet.text }}</p>
           <div class="sentiment" :class="tweet.sentiment_nuvi">
             <div class="sentiment-details">
-              <span>{{ tweet.sentiment_nuvi }} (Score: {{ tweet.sentiment_score_nuvi.toFixed(2) }})</span>
+              <span
+                >{{ tweet.sentiment_nuvi }} (Score: {{
+                tweet.sentiment_score_nuvi.toFixed(2) }})</span
+              >
               <span class="model-source">Source: Nuvi (original data)</span>
             </div>
           </div>
           <div class="sentiment" :class="tweet.sentiment_textblob">
             <div class="sentiment-details">
-              <span>{{ tweet.sentiment_textblob }} (Polarity: {{ tweet.polarity_textblob.toFixed(2) }})</span>
-              <span class="model-source">Source: TextBlob (traditional NLP model)</span>
+              <span
+                >{{ tweet.sentiment_textblob }} (Polarity: {{
+                tweet.polarity_textblob.toFixed(2) }})</span
+              >
+              <span class="model-source"
+                >Source: TextBlob (traditional NLP model)</span
+              >
             </div>
           </div>
           <div class="sentiment" :class="tweet.sentiment_roberta">
             <div class="sentiment-details">
-              <span>{{ tweet.sentiment_roberta }} (Score: {{ tweet.score_roberta.toFixed(2) }})</span>
-              <span class="model-source">Source: roBERTa (newer deep learning NLP model)</span>
+              <span
+                >{{ tweet.sentiment_roberta }} (Score: {{
+                tweet.score_roberta.toFixed(2) }})</span
+              >
+              <span class="model-source"
+                >Source: roBERTa (newer deep learning NLP model)</span
+              >
             </div>
           </div>
           <div class="sentiment" :class="tweet.sentiment_openai">
             <div class="sentiment-details">
-              <span>{{ tweet.sentiment_openai }} (Confidence: {{ tweet.confidence_openai.toFixed(2) }})</span>
-              <span class="model-source">Source: OpenAI API (state-of-the-art NLP model)</span>
+              <span
+                >{{ tweet.sentiment_openai }} (Confidence: {{
+                tweet.confidence_openai.toFixed(2) }})</span
+              >
+              <span class="model-source"
+                >Source: OpenAI API (state-of-the-art NLP model)</span
+              >
             </div>
           </div>
         </div>
@@ -180,6 +209,7 @@
       createApp({
         setup() {
           const tweets = ref([]);
+          const errorMessage = ref("");
 
           const handleFileUpload = async (event) => {
             const file = event.target.files[0];
@@ -187,7 +217,11 @@
               const formData = new FormData();
               formData.append("file", file);
 
-              const baseURL = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "");
+              const baseURL =
+                window.location.protocol +
+                "//" +
+                window.location.hostname +
+                (window.location.port ? ":" + window.location.port : "");
               const apiURL = `${baseURL}/api/v1/upload-csv`;
 
               try {
@@ -197,9 +231,20 @@
                   },
                 });
                 tweets.value = response.data.results;
+                errorMessage.value = "";
               } catch (error) {
                 console.error("Error uploading file:", error);
-                alert("Error uploading file. Please try again.");
+                if (
+                  error.response &&
+                  error.response.data &&
+                  error.response.data.detail
+                ) {
+                  errorMessage.value = error.response.data.detail;
+                } else {
+                  errorMessage.value =
+                    "An error occurred while uploading the file. Please try again.";
+                }
+                tweets.value = [];
               }
             }
           };
@@ -212,6 +257,7 @@
 
           return {
             tweets,
+            errorMessage,
             handleFileUpload,
             formatDate,
           };

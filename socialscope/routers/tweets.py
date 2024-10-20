@@ -3,6 +3,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi.responses import JSONResponse
 
 from socialscope.services.sentiment_analysis import analyze_dataframe
 from socialscope.utils.data_processing import process_csv
@@ -36,8 +37,13 @@ async def upload_csv(file: UploadFile = File(...)):
             "total_rows": len(df),
             "results": results,
         }
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"detail": str(e)})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing CSV: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"An unexpected error occurred: {str(e)}"},
+        )
 
 
 @router.get("/metrics")
