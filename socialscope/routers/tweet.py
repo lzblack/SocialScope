@@ -17,6 +17,7 @@ async def analyze_sentiment(text_input: TextInput):
     """
     Analyze sentiment of a single text input.
     """
+    print(text_input)
     try:
         # Create a single-row DataFrame
         df = pd.DataFrame([{"text": text_input.text}])
