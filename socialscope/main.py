@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from socialscope.routers import tweets
+from socialscope.routers import tweets, tweet
 
 load_dotenv()
 
@@ -32,13 +32,14 @@ app.add_middleware(
 )
 
 app.include_router(tweets.router, prefix="/api/v1")
+app.include_router(tweet.router, prefix="/api/v1")
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/")
-async def read_root():
+@app.get("/hello")
+async def welcome():
     """
     Welcome message for the socialscope API.
     """
@@ -46,8 +47,14 @@ async def read_root():
 
 
 @app.get("/x", response_class=HTMLResponse)
-async def get_tweet_page():
-    with open("static/index.html") as f:
+async def get_tweets_page():
+    with open("static/tweets.html") as f:
+        return f.read()
+
+
+@app.get("/", response_class=HTMLResponse)
+async def get_text_sentiment():
+    with open("static/tweet.html") as f:
         return f.read()
 
 

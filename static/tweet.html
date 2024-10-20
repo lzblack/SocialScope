@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single Text Sentiment Analysis</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #ecf0f1;
+        --text-color: #34495e;
+        --positive-color: #2ecc71;
+        --negative-color: #e74c3c;
+        --neutral-color: #95a5a6;
+      }
+
+      body {
+        font-family: "Roboto", Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
+
+      #app {
+        max-width: 800px;
+        margin: auto;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        resize: vertical;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      .result-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .sentiment {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .sentiment-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9em;
+      }
+
+      .model-source {
+        font-style: italic;
+        color: var(--secondary-color);
+      }
+
+      .positive {
+        background-color: rgba(46, 204, 113, 0.2);
+        color: #27ae60;
+      }
+
+      .negative {
+        background-color: rgba(231, 76, 60, 0.2);
+        color: #c0392b;
+      }
+
+      .neutral {
+        background-color: rgba(149, 165, 166, 0.2);
+        color: #7f8c8d;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+
+        .sentiment-details {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .model-source {
+          margin-top: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Single Text Sentiment Analysis</h1>
+      <textarea
+        v-model="inputText"
+        placeholder="Enter or paste your text here..."
+      ></textarea>
+      <button @click="analyzeSentiment">Analyze Sentiment</button>
+      <div v-if="sentimentResult" class="result-card">
+        <h3>Analysis Result</h3>
+        <p><strong>Input Text:</strong> {{ inputText }}</p>
+        <div class="sentiment" :class="sentimentResult.sentiment_textblob">
+          <div class="sentiment-details">
+            <span
+              ><strong>TextBlob:</strong> {{ sentimentResult.sentiment_textblob
+              }} (Polarity: {{ sentimentResult.polarity_textblob.toFixed(2)
+              }})</span
+            >
+            <span class="model-source"
+              >Source: TextBlob (traditional NLP model)</span
+            >
+          </div>
+        </div>
+        <div class="sentiment" :class="sentimentResult.sentiment_roberta">
+          <div class="sentiment-details">
+            <span
+              ><strong>roBERTa:</strong> {{ sentimentResult.sentiment_roberta }}
+              (Score: {{ sentimentResult.score_roberta.toFixed(2) }})</span
+            >
+            <span class="model-source"
+              >Source: roBERTa (newer deep learning NLP model)</span
+            >
+          </div>
+        </div>
+        <div class="sentiment" :class="sentimentResult.sentiment_openai">
+          <div class="sentiment-details">
+            <span
+              ><strong>OpenAI:</strong> {{ sentimentResult.sentiment_openai }}
+              (Confidence: {{ sentimentResult.confidence_openai.toFixed(2)
+              }})</span
+            >
+            <span class="model-source"
+              >Source: OpenAI API (state-of-the-art NLP model)</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      createApp({
+        setup() {
+          const inputText = ref("");
+          const sentimentResult = ref(null);
+
+          const analyzeSentiment = async () => {
+            if (!inputText.value.trim()) {
+              alert("Please enter some text to analyze.");
+              return;
+            }
+
+            const baseURL =
+              window.location.protocol +
+              "//" +
+              window.location.hostname +
+              (window.location.port ? ":" + window.location.port : "");
+            const apiURL = `${baseURL}/api/v1/analyze-sentiment`;
+
+            try {
+              const response = await axios.post(apiURL, {
+                text: inputText.value,
+              });
+              //   console.log(response.data);
+              sentimentResult.value = response.data.result;
+            } catch (error) {
+              console.error("Error analyzing sentiment:", error);
+              alert("Error analyzing sentiment. Please try again.");
+            }
+          };
+
+          return {
+            inputText,
+            sentimentResult,
+            analyzeSentiment,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
