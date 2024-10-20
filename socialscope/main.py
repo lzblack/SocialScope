@@ -1,13 +1,13 @@
 import os
 
-from fastapi.responses import HTMLResponse
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from socialscope.routers import tweets, tweet
+from socialscope.routers import tweet, tweets
 
 load_dotenv()
 
