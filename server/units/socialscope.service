@@ -24,8 +24,8 @@ RestartSec=5s
 #StandardOutput=journal
 #StandardError=journal
 
-StandardOutput=append:/home/zli/apps/logs/socialscope/app_log
-StandardError=append:/home/zli/apps/logs/socialscope/app_error_log
+StandardOutput=append:/home/zli/apps/logs/socialscope/app.log
+StandardError=append:/home/zli/apps/logs/socialscope/error.log
 
 [Install]
 WantedBy=multi-user.target
