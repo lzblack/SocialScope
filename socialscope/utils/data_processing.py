@@ -11,7 +11,7 @@ def remove_ordinal_indicator(date_string):
 
 def process_csv(file):
     df = pd.read_csv(file)
-    required_columns = ["author_username", "post_created_at", "raw_body_text"]
+    required_columns = ["author_username", "post_created_at", "raw_body_text", "sentiment_score"]
 
     if not all(col in df.columns for col in required_columns):
         raise ValueError("CSV lacks required columns")
@@ -35,11 +35,19 @@ def process_csv(file):
     # Replace NaT with None
     df = df.replace({pd.NaT: None})
 
+    df['sentiment_score'] = df['sentiment_score'].astype(float)
+    # Add sentiment column based on Nuvi sentiment score
+    df["sentiment"] = np.where(df["sentiment_score"] > 0, "positive", "negative")
+
+    required_columns.append("sentiment")
+
     return df[required_columns].rename(
         columns={
             "author_username": "author",
             "post_created_at": "timestamp",
             "raw_body_text": "text",
+            "sentiment_score": "sentiment_score_nuvi",
+            "sentiment": "sentiment_nuvi",
         }
     )
 

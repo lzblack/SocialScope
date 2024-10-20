@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SocialScope Tweet Sentiment Analysis</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #ecf0f1;
+        --text-color: #34495e;
+        --positive-color: #2ecc71;
+        --negative-color: #e74c3c;
+        --neutral-color: #95a5a6;
+      }
+      
+      body {
+        font-family: 'Roboto', Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
+      
+      #app {
+        max-width: 800px;
+        margin: auto;
+      }
+      
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      
+      input[type="file"] {
+        display: none;
+      }
+      
+      .file-upload-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      .file-upload-label:hover {
+        background-color: #2980b9;
+      }
+      
+      .tweet {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      
+      .tweet:hover {
+        transform: translateY(-5px);
+      }
+      
+      .tweet-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        color: var(--secondary-color);
+      }
+      
+      .sentiment {
+        font-weight: bold;
+        margin-top: 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+      
+      .sentiment-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9em;
+      }
+      
+      .model-source {
+        font-style: italic;
+        color: var(--secondary-color);
+      }
+      
+      .positive {
+        background-color: var(--positive-color);
+        color: white;
+      }
+      
+      .negative {
+        background-color: var(--negative-color);
+        color: white;
+      }
+      
+      .neutral {
+        background-color: var(--neutral-color);
+        color: white;
+      }
+      
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+        
+        .tweet {
+          padding: 15px;
+        }
+        
+        .sentiment-details {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        
+        .model-source {
+          margin-top: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>SocialScope Tweet Sentiment Analysis</h1>
+      <label class="file-upload-label">
+        Upload CSV File
+        <input type="file" @change="handleFileUpload" accept=".csv" />
+      </label>
+      <div v-if="tweets.length > 0">
+        <h2>Analyzed Tweets</h2>
+        <div v-for="tweet in tweets" :key="tweet.id" class="tweet">
+          <div class="tweet-header">
+            <span><strong>{{ tweet.author }}</strong></span>
+            <span>{{ formatDate(tweet.timestamp) }}</span>
+          </div>
+          <p>{{ tweet.text }}</p>
+          <div class="sentiment" :class="tweet.sentiment_nuvi">
+            <div class="sentiment-details">
+              <span>{{ tweet.sentiment_nuvi }} (Score: {{ tweet.sentiment_score_nuvi.toFixed(2) }})</span>
+              <span class="model-source">Source: Nuvi (original data)</span>
+            </div>
+          </div>
+          <div class="sentiment" :class="tweet.sentiment_textblob">
+            <div class="sentiment-details">
+              <span>{{ tweet.sentiment_textblob }} (Polarity: {{ tweet.polarity_textblob.toFixed(2) }})</span>
+              <span class="model-source">Source: TextBlob (traditional NLP model)</span>
+            </div>
+          </div>
+          <div class="sentiment" :class="tweet.sentiment_roberta">
+            <div class="sentiment-details">
+              <span>{{ tweet.sentiment_roberta }} (Score: {{ tweet.score_roberta.toFixed(2) }})</span>
+              <span class="model-source">Source: roBERTa (newer deep learning NLP model)</span>
+            </div>
+          </div>
+          <div class="sentiment" :class="tweet.sentiment_openai">
+            <div class="sentiment-details">
+              <span>{{ tweet.sentiment_openai }} (Confidence: {{ tweet.confidence_openai.toFixed(2) }})</span>
+              <span class="model-source">Source: OpenAI API (state-of-the-art NLP model)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      createApp({
+        setup() {
+          const tweets = ref([]);
+
+          const handleFileUpload = async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+              const formData = new FormData();
+              formData.append("file", file);
+
+              const baseURL = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "");
+              const apiURL = `${baseURL}/api/v1/upload-csv`;
+
+              try {
+                const response = await axios.post(apiURL, formData, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                });
+                tweets.value = response.data.results;
+              } catch (error) {
+                console.error("Error uploading file:", error);
+                alert("Error uploading file. Please try again.");
+              }
+            }
+          };
+
+          const formatDate = (dateString) => {
+            if (!dateString) return "N/A";
+            const date = new Date(dateString);
+            return date.toLocaleString();
+          };
+
+          return {
+            tweets,
+            handleFileUpload,
+            formatDate,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
