@@ -21,11 +21,11 @@ ExecStart=/bin/bash -c 'cd /home/zli/apps/SocialScope && /home/zli/.pyenv/shims/
 Restart=always
 RestartSec=5s
 
-StandardOutput=journal
-StandardError=journal
+#StandardOutput=journal
+#StandardError=journal
 
-#StandardOutput=append:/home/zli/apps/logs/socialscope/app_log
-#StandardError=append:/home/zli/apps/logs/socialscope/app_error_log
+StandardOutput=append:/home/zli/apps/logs/socialscope/app_log
+StandardError=append:/home/zli/apps/logs/socialscope/app_error_log
 
 [Install]
 WantedBy=multi-user.target
