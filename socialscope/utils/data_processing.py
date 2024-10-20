@@ -1,7 +1,8 @@
 import re
-import pandas as pd
-import numpy as np
 from datetime import datetime
+
+import numpy as np
+import pandas as pd
 
 
 def remove_ordinal_indicator(date_string):
@@ -11,7 +12,16 @@ def remove_ordinal_indicator(date_string):
 
 def process_csv(file):
     df = pd.read_csv(file)
-    required_columns = ["author_username", "post_created_at", "raw_body_text", "sentiment_score"]
+
+    if len(df) > 10:
+        raise ValueError("CSV file contains more than 10 rows")
+
+    required_columns = [
+        "author_username",
+        "post_created_at",
+        "raw_body_text",
+        "sentiment_score",
+    ]
 
     if not all(col in df.columns for col in required_columns):
         raise ValueError("CSV lacks required columns")
@@ -35,9 +45,14 @@ def process_csv(file):
     # Replace NaT with None
     df = df.replace({pd.NaT: None})
 
-    df['sentiment_score'] = df['sentiment_score'].astype(float)
-    # Add sentiment column based on Nuvi sentiment score
-    df["sentiment"] = np.where(df["sentiment_score"] > 0, "positive", "negative")
+    df["sentiment_score"] = df["sentiment_score"].astype(float)
+
+    # Add sentiment column based on Nuvi sentiment score, if score is greater than 0, sentiment is positive, else if score is less than 0, sentiment is negative else neutral
+    df["sentiment"] = np.where(
+        df["sentiment_score"] > 0,
+        "positive",
+        np.where(df["sentiment_score"] < 0, "negative", "neutral"),
+    )
 
     required_columns.append("sentiment")
 
