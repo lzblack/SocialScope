@@ -139,6 +139,13 @@
         border-radius: 4px;
         margin-top: 10px;
       }
+      .loading-message {
+        background-color: #e3f2fd;
+        color: #1565c0;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -148,6 +155,9 @@
         Upload CSV File
         <input type="file" @change="handleFileUpload" accept=".csv" />
       </label>
+      <div v-if="isLoading" class="loading-message">
+        Processing file, please wait...
+      </div>
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div v-if="tweets.length > 0">
         <h2>Analyzed Tweets</h2>
@@ -210,10 +220,15 @@
         setup() {
           const tweets = ref([]);
           const errorMessage = ref("");
+          const isLoading = ref(false);
 
           const handleFileUpload = async (event) => {
             const file = event.target.files[0];
             if (file) {
+              errorMessage.value = "";
+              tweets.value = [];
+              isLoading.value = true;
+              
               const formData = new FormData();
               formData.append("file", file);
 
@@ -231,7 +246,6 @@
                   },
                 });
                 tweets.value = response.data.results;
-                errorMessage.value = "";
               } catch (error) {
                 console.error("Error uploading file:", error);
                 if (
@@ -245,6 +259,8 @@
                     "An error occurred while uploading the file. Please try again.";
                 }
                 tweets.value = [];
+              }finally {
+                isLoading.value = false;
               }
             }
           };
@@ -258,6 +274,7 @@
           return {
             tweets,
             errorMessage,
+            isLoading,
             handleFileUpload,
             formatDate,
           };
