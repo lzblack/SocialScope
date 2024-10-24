@@ -170,7 +170,7 @@
           <div class="sentiment" :class="tweet.sentiment_nuvi">
             <div class="sentiment-details">
               <span
-                >{{ tweet.sentiment_nuvi }} (Score: {{
+                >{{ tweet.sentiment_nuvi }} (Nuvi Score: {{
                 tweet.sentiment_score_nuvi.toFixed(2) }})</span
               >
               <span class="model-source">Source: Nuvi (original data)</span>
@@ -179,7 +179,7 @@
           <div class="sentiment" :class="tweet.sentiment_textblob">
             <div class="sentiment-details">
               <span
-                >{{ tweet.sentiment_textblob }} (Polarity: {{
+                >{{ tweet.sentiment_textblob }} (Polarity Score: {{
                 tweet.polarity_textblob.toFixed(2) }})</span
               >
               <span class="model-source"
@@ -190,22 +190,22 @@
           <div class="sentiment" :class="tweet.sentiment_roberta">
             <div class="sentiment-details">
               <span
-                >{{ tweet.sentiment_roberta }} (Score: {{
+                >{{ tweet.sentiment_roberta }} (Probability Score: {{
                 tweet.score_roberta.toFixed(2) }})</span
               >
               <span class="model-source"
-                >Source: roBERTa (newer deep learning NLP model)</span
+                >Source: roBERTa (newer Transformer-based Pretrained Model)</span
               >
             </div>
           </div>
           <div class="sentiment" :class="tweet.sentiment_openai">
             <div class="sentiment-details">
               <span
-                >{{ tweet.sentiment_openai }} (Confidence: {{
+                >{{ tweet.sentiment_openai }} (Confidence Score: {{
                 tweet.confidence_openai.toFixed(2) }})</span
               >
               <span class="model-source"
-                >Source: OpenAI API (state-of-the-art NLP model)</span
+                >Source: OpenAI API (state-of-the-art Large Language Model)</span
               >
             </div>
           </div>

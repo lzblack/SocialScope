@@ -139,7 +139,7 @@
           <div class="sentiment-details">
             <span
               ><strong>TextBlob:</strong> {{ sentimentResult.sentiment_textblob
-              }} (Polarity: {{ sentimentResult.polarity_textblob.toFixed(2)
+              }} (Polarity Score: {{ sentimentResult.polarity_textblob.toFixed(2)
               }})</span
             >
             <span class="model-source"
@@ -151,10 +151,10 @@
           <div class="sentiment-details">
             <span
               ><strong>roBERTa:</strong> {{ sentimentResult.sentiment_roberta }}
-              (Score: {{ sentimentResult.score_roberta.toFixed(2) }})</span
+              (Probability Score: {{ sentimentResult.score_roberta.toFixed(2) }})</span
             >
             <span class="model-source"
-              >Source: roBERTa (newer deep learning NLP model)</span
+              >Source: roBERTa (newer Transformer-based Pretrained Model)</span
             >
           </div>
         </div>
@@ -162,11 +162,11 @@
           <div class="sentiment-details">
             <span
               ><strong>OpenAI:</strong> {{ sentimentResult.sentiment_openai }}
-              (Confidence: {{ sentimentResult.confidence_openai.toFixed(2)
+              (Confidence Score: {{ sentimentResult.confidence_openai.toFixed(2)
               }})</span
             >
             <span class="model-source"
-              >Source: OpenAI API (state-of-the-art NLP model)</span
+              >Source: OpenAI API (state-of-the-art Large Language Model)</span
             >
           </div>
         </div>
