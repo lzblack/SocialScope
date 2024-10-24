@@ -3,7 +3,6 @@ from pydantic import BaseModel
 import pandas as pd
 
 from socialscope.services.sentiment_analysis import analyze_dataframe
-from socialscope.utils.data_processing import process_csv
 
 router = APIRouter()
 
