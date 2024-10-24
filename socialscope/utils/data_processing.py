@@ -10,7 +10,7 @@ def remove_ordinal_indicator(date_string):
 
 
 def process_csv(file):
-    df = pd.read_csv(file)
+    df = pd.read_csv(file, encoding="utf-8")
 
     if len(df) > 10:
         raise ValueError("CSV file contains more than 10 rows")
