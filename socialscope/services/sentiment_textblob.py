@@ -29,6 +29,22 @@ def analyze_sentiment_textblob(text: str) -> dict:
     }
 
 
+def main():
+def main():
+    texts = [
+        "I really love this amazing product but the service was terrible",
+        "The product quality is excellent but customer service was disappointing",
+        "This is a neutral statement without much emotion",
+        "Covid cases are increasing fast!",
+        "😊🤣",
+        "@charles_pare @28delayslater @Model3Owners Model S plaid is faster, quicker, more range, and far safer than the Taycan. But hey, it's your money.",
+    ]
+
+    for i, text in enumerate(texts, 1):
+        print(f"\nAnalyzing Text {i}:")
+        print(f"Text: {text}")
+        print(analyze_sentiment_textblob(text))
+
+
 if __name__ == "__main__":
-    result = analyze_sentiment_textblob("Covid cases are increasing fast!")
-    print(result)
+    main()
