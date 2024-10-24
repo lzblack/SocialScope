@@ -30,5 +30,5 @@ def analyze_sentiment_textblob(text: str) -> dict:
 
 
 if __name__ == "__main__":
-    result = analyze_sentiment_textblob("I love this product!")
+    result = analyze_sentiment_textblob("Covid cases are increasing fast!")
     print(result)
