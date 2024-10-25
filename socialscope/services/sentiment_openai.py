@@ -20,9 +20,9 @@ def analyze_sentiment_openai(text: str) -> dict:
         }
 
     prompt = f"""Analyze the sentiment of the following text and provide a response in JSON format with the following keys:
-    - sentiment: either "positive", "negative", or "neutral"
+    - sentiment: a string, which can only be "positive", "negative", or "neutral"
     - confidence: a float value between 0 and 1 indicating the confidence in the sentiment classification
-    - reason: a string that briefly explains why the text was classified as the given sentiment
+    - reason: a string that briefly explains why the text was classified as the given sentiment, especially when there is sarcasm or mixed emotions.
 
 
     Text to analyze: "{text}"
@@ -66,8 +66,8 @@ def analyze_sentiment_openai(text: str) -> dict:
 
 def main():
     texts = [
-        "I really love this amazing product but the service was terrible",
-        "The product quality is excellent but customer service was disappointing",
+        # "I really love this amazing product but the service was terrible",
+        # "The product quality is excellent but customer service was disappointing",
         "This is a neutral statement without much emotion",
         "Covid cases are increasing fast!",
         "😊🤣",
