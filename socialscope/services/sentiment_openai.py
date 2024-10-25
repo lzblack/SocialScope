@@ -15,11 +15,14 @@ def analyze_sentiment_openai(text: str) -> dict:
             "text": text,
             "sentiment": "neutral",
             "confidence": 0.0,
+            "reason": "Text is empty or not a string",
         }
 
     prompt = f"""Analyze the sentiment of the following text and provide a response in JSON format with the following keys:
     - sentiment: either "positive", "negative", or "neutral"
     - confidence: a float value between 0 and 1 indicating the confidence in the sentiment classification
+    - reason: a string that briefly explains why the text was classified as the given sentiment
+
 
     Text to analyze: "{text}"
 
@@ -36,7 +39,7 @@ def analyze_sentiment_openai(text: str) -> dict:
                 },
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=100,
+            max_tokens=500,
             n=1,
             stop=None,
             temperature=0.2,
@@ -48,6 +51,7 @@ def analyze_sentiment_openai(text: str) -> dict:
             "text": text,
             "sentiment_openai": result["sentiment"],
             "confidence": result["confidence"],
+            "reason": result["reason"],
         }
     except Exception as e:
         print(f"Error in API call: {str(e)}")
@@ -55,6 +59,7 @@ def analyze_sentiment_openai(text: str) -> dict:
             "text": text,
             "sentiment": "neutral",
             "confidence": 0.0,
+            "reason": "An error occurred while analyzing the text",
         }
 
 
