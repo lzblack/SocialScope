@@ -1,10 +1,12 @@
 import os
+import pprint
 import threading
 from pathlib import Path
 
 import numpy as np
 from scipy.special import softmax
-from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
+from transformers import (AutoConfig, AutoModelForSequenceClassification,
+                          AutoTokenizer)
 
 
 class SentimentAnalyzer:
@@ -84,7 +86,7 @@ def main():
     for i, text in enumerate(texts, 1):
         print(f"\nAnalyzing Text {i}:")
         print(f"Text: {text}")
-        print(analyze_sentiment_roberta(text))
+        pprint.pprint(analyze_sentiment_roberta(text))
 
 
 if __name__ == "__main__":

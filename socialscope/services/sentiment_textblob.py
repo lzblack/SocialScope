@@ -1,3 +1,4 @@
+import pprint
 from textblob import TextBlob
 
 
@@ -30,7 +31,6 @@ def analyze_sentiment_textblob(text: str) -> dict:
 
 
 def main():
-def main():
     texts = [
         "I really love this amazing product but the service was terrible",
         "The product quality is excellent but customer service was disappointing",
@@ -43,7 +43,7 @@ def main():
     for i, text in enumerate(texts, 1):
         print(f"\nAnalyzing Text {i}:")
         print(f"Text: {text}")
-        print(analyze_sentiment_textblob(text))
+        pprint.pprint(analyze_sentiment_textblob(text))
 
 
 if __name__ == "__main__":

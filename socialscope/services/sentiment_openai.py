@@ -1,4 +1,5 @@
 import os
+import pprint
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -76,7 +77,7 @@ def main():
     for i, text in enumerate(texts, 1):
         print(f"\nAnalyzing Text {i}:")
         print(f"Text: {text}")
-        print(analyze_sentiment_openai(text))
+        pprint.pprint(analyze_sentiment_openai(text))
 
 
 if __name__ == "__main__":
