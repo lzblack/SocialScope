@@ -1,3 +1,4 @@
+import json
 import os
 import pprint
 
@@ -46,7 +47,7 @@ def analyze_sentiment_openai(text: str) -> dict:
             temperature=0.2,
         )
 
-        result = eval(response.choices[0].message.content)
+        result = json.loads(response.choices[0].message.content)
 
         return {
             "text": text,
